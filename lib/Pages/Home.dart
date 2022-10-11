@@ -6,6 +6,7 @@ import 'package:wordlyx/Utils/PersonalColors.dart';
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:wordlyx/Widgets/Wordlyx.dart';
+import 'package:parallax_rain/parallax_rain.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final Key parallaxOne = GlobalKey();
 
   
   Future<String> loadWords() async {
@@ -36,69 +39,81 @@ class _HomeState extends State<Home> {
           color: clr.darkGray,
           width: width,
           height: height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Center(child: Wordlyx(clr: clr)),
-              ),
-
-              Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Let's start playing",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.normal,
-                        color: clr.white
-                      ),
-                    ),
-
-                    const SizedBox(height: 35,),
-
-                    InkWell(
-                      onTap: () async {
-                        String words = await loadWords();
-                        List<String> l = words.split('\n');
-                        // for (int i = 0; i < l.length; i++) {
-                        //   print("$i --- ${l[i]}");
-                        // }
-
-                        Random random = Random();
-                        int rand = random.nextInt(l.length); 
-
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushAndRemoveUntil(
-                          context, 
-                          MaterialPageRoute(builder: (context)=> Game(word: l[rand],)), 
-                          (route) => false
-                        );
-                      },
-                      child: Container(
-                        // color: clr.white,
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: clr.white,
-                        ),
-                              
-                        child: Icon(
-                          Icons.play_arrow_rounded,
-                          size: 60,
-                          color: clr.darkGray,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+          child: ParallaxRain(
+            key: parallaxOne,
+            dropColors: const [
+              Colors.red,
+              Colors.green,
+              Colors.blue,
+              Colors.yellow,
+              Colors.brown,
+              Colors.blueGrey
             ],
+            trail: true,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Center(child: Wordlyx(clr: clr)),
+                ),
+                  
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Let's start playing",
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.normal,
+                          color: clr.white
+                        ),
+                      ),
+                  
+                      const SizedBox(height: 35,),
+                  
+                      InkWell(
+                        onTap: () async {
+                          String words = await loadWords();
+                          List<String> l = words.split('\n');
+                          // for (int i = 0; i < l.length; i++) {
+                          //   print("$i --- ${l[i]}");
+                          // }
+                  
+                          Random random = Random();
+                          int rand = random.nextInt(l.length); 
+                  
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushAndRemoveUntil(
+                            context, 
+                            MaterialPageRoute(builder: (context)=> Game(word: l[rand].toUpperCase(),)), 
+                            (route) => false
+                          );
+                        },
+                        child: Container(
+                          // color: clr.white,
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: clr.white,
+                          ),
+                                
+                          child: Icon(
+                            Icons.play_arrow_rounded,
+                            size: 60,
+                            color: clr.darkGray,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
     
